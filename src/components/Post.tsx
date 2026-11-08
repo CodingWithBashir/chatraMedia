@@ -1,0 +1,32 @@
+import { Link } from 'react-router-dom';
+import { MessageCircle, Repeat2, Heart, Bookmark, Share2, Pin, Image as ImageIcon, Smile, BarChart3, Link as LinkIcon, Flag, Trash2, ArrowUpRight } from 'lucide-react';
+import type { Post } from '../types';
+import { getPerson } from '../data';
+import { useApp, formatCount } from '../store';
+import { Avatar, IconButton, Menu } from './UI';
+
+export function PostCard({ post, showPinned = false, detail = false }: { post: Post; showPinned?: boolean; detail?: boolean }) {
+  const { profile, toggleLike, toggleBookmark, toggleRepost, openModal, notify, setPosts } = useApp();
+  const author = getPerson(post.authorId);
+  const own = post.authorId === 'bashir';
+  const copyLink = async () => {
+    const url = `${window.location.origin}/?post=${post.id}`;
+    try { await navigator.clipboard.writeText(url); notify('Post link copied to clipboard'); }
+    catch { openModal('share', { url }); }
+  };
+  return <article className={`post-card panel ${detail ? 'post-detail-card' : ''}`}>
+    {showPinned && post.pinned && <div className="pinned-label"><Pin size={15} fill="currentColor" />Pinned post</div>}
+    <div className="post-author"><Link to={own ? '/profile' : `/profile/${author.id}`} className="post-avatar-link"><Avatar src={own ? profile.avatar : author.avatar} alt={author.name} size={44} /></Link><div className="post-author-info"><Link to={own ? '/profile' : `/profile/${author.id}`} className="post-author-name">{own ? profile.name : author.name}</Link><span className="post-meta"><Link to={own ? '/profile' : `/profile/${author.id}`}>@{own ? profile.handle : author.handle}</Link><span className="meta-dot">·</span><time>{post.time}</time></span></div><Menu label={`Options for ${author.name}'s post`} items={[
+      { label: 'Copy link to post', icon: <LinkIcon size={16} />, onClick: copyLink },
+      { label: post.bookmarked ? 'Remove bookmark' : 'Bookmark post', icon: <Bookmark size={16} />, onClick: () => toggleBookmark(post.id) },
+      ...(own && post.id.startsWith('post-') ? [{ label: 'Delete post', icon: <Trash2 size={16} />, danger: true, onClick: () => { setPosts(prev => prev.filter(p => p.id !== post.id)); notify('Post deleted'); } }] : [{ label: 'Report post', icon: <Flag size={16} />, onClick: () => openModal('report', { postId: post.id }) }]),
+    ]} /></div>
+    <div className="post-body">{post.title && <h3 className="post-title">{post.title}</h3>}{post.text && <p className="post-text">{post.text}</p>}{post.pollOptions && <div className="post-poll" aria-label="Poll"><p>{post.pollVote !== undefined ? 'Thanks for voting!' : 'What do you think?'}</p>{post.pollOptions.map((option, index) => { const total = (post.pollVotes || []).reduce((sum, votes) => sum + votes, 0); const percent = total ? Math.round(((post.pollVotes?.[index] || 0) / total) * 100) : 0; return <button key={`${index}-${option}`} className={post.pollVote === index ? 'selected' : ''} disabled={post.pollVote !== undefined} onClick={() => setPosts(prev => prev.map(item => item.id === post.id ? { ...item, pollVote: index, pollVotes: (item.pollVotes || post.pollOptions!.map(() => 0)).map((votes, i) => votes + (i === index ? 1 : 0)) } : item))}><span className="poll-fill" style={{ width: `${percent}%` }} /><span className="poll-label">{option}</span>{post.pollVote !== undefined && <strong>{percent}%</strong>}</button>; })}<small>{(post.pollVotes || []).reduce((sum, votes) => sum + votes, 0)} votes · Poll closes in 24 hours</small></div>}{post.image && <button className="post-image-button" onClick={() => openModal('image', { src: post.image!, alt: `Image shared by ${author.name}` })} aria-label={`View image shared by ${author.name}`}><img className={`post-image ${post.id === 'p-pinned' ? 'brand-post-image' : ''}`} src={post.image} alt={`Shared by ${author.name}`} loading="lazy" /></button>}{post.attachment && <a className="link-attachment" href={post.attachment.url} target="_blank" rel="noreferrer"><img src={post.attachment.image} alt="Terminal preview" /><span><strong>{post.attachment.title}</strong><span>{post.attachment.description}</span><small><LinkIcon size={13} />{post.attachment.url.replace('https://', '')}</small></span><ArrowUpRight size={18} /></a>}</div>
+    <div className="post-actions"><button aria-label={`Comment on ${author.name}'s post`} onClick={() => openModal('post', { id: post.id })}><MessageCircle size={20} /><span>{formatCount(post.comments)}</span></button><button className={post.reposted ? 'reposted' : ''} aria-label={post.reposted ? 'Undo repost' : 'Repost'} aria-pressed={!!post.reposted} onClick={() => toggleRepost(post.id)}><Repeat2 size={21} /><span>{formatCount(post.reposts)}</span></button><button className={post.liked ? 'liked' : ''} aria-label={post.liked ? 'Unlike post' : 'Like post'} aria-pressed={!!post.liked} onClick={() => toggleLike(post.id)}><Heart size={20} fill={post.liked ? 'currentColor' : 'none'} /><span>{formatCount(post.likes)}</span></button>{!detail && <button className={`bookmark-action ${post.bookmarked ? 'bookmarked' : ''}`} aria-label={post.bookmarked ? 'Remove bookmark' : 'Bookmark post'} aria-pressed={!!post.bookmarked} onClick={() => toggleBookmark(post.id)}><Bookmark size={20} fill={post.bookmarked ? 'currentColor' : 'none'} /><span className="desktop-bookmark-count">{post.id === 'p-pinned' ? '86' : ''}</span></button>}{detail && <IconButton label="Share post" onClick={copyLink}><Share2 size={20} /></IconButton>}</div>
+  </article>;
+}
+export function Composer({ placeholder = 'What are you sharing today?', communityId }: { placeholder?: string; communityId?: string }) {
+  const { profile, openModal } = useApp();
+  const data = communityId ? { communityId } : undefined;
+  return <div className="composer panel"><Avatar src={profile.avatar} alt={profile.name} size={43} /><button className="composer-placeholder" onClick={() => openModal('compose', data)}>{placeholder}</button><div className="composer-tools"><IconButton label="Add a photo" onClick={() => openModal('compose', { ...data, media: 'true' })}><ImageIcon size={21} /></IconButton><IconButton label="Create a poll" className="poll-tool" onClick={() => openModal('compose', { ...data, poll: 'true' })}><BarChart3 size={21} /></IconButton><IconButton label="Add an emoji" onClick={() => openModal('compose', { ...data, emoji: 'true' })}><Smile size={21} /></IconButton></div></div>;
+}
