@@ -7,7 +7,8 @@ export type Post = {
   likes: number; comments: number; reposts: number; liked?: boolean;
   bookmarked?: boolean; reposted?: boolean; pinned?: boolean; tags: string[];
   communityId?: string; title?: string; attachment?: { title: string; description: string; url: string; image: string };
-  pollOptions?: string[]; pollVotes?: number[]; pollVote?: number;
+  pollOptions?: string[]; pollVotes?: number[]; pollVote?: number; pollDuration?: string; pollMultiple?: boolean;
+  authorSnapshot?: { id: string; name: string; handle: string; avatar: string; role?: string; location?: string };
 };
 export type Message = {
   id: string; sender: 'me' | 'them'; text: string; time: string;
@@ -24,7 +25,7 @@ export type Community = {
 };
 export type Profile = {
   name: string; handle: string; bio: string; location: string; website: string;
-  avatar: string; cover?: string;
+  avatar: string; cover?: string; role?: string;
 };
 export type Story = { text: string; image: string; createdAt: number };
 export type Preferences = { purpose: string; language: string; region: string; completed: boolean };
@@ -39,5 +40,5 @@ export type Notification = {
   id: string; personId: string; kind: 'like' | 'follow' | 'comment' | 'repost' | 'community';
   text: string; time: string; read: boolean; postId?: string;
 };
-export type Comment = { id: string; authorId: string; text: string; time: string };
+export type Comment = { id: string; authorId: string; text: string; time: string; authorSnapshot?: { id: string; name: string; handle: string; avatar: string } };
 export type ModalState = { type: string; data?: Record<string, string> } | null;

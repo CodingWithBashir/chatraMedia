@@ -6,3 +6,8 @@ dist/
 playwright-report/
 test-results/
 .DS_Store
+
+# Keep bulky design uploads and generated media out of Git; required app assets remain tracked.
+/public/images/uploads/
+/design-references/
+/public/images/generated/
