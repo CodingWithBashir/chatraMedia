@@ -1,0 +1,10 @@
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  background: #0b1522;
+}
+
+body {
+  margin: 0;
+}

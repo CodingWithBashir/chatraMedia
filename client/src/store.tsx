@@ -4,6 +4,7 @@ import type { Session } from '@supabase/supabase-js';
 import { initialProfile, initialPosts, initialThreads, initialCommunities, initialNotifications, initialComments, defaultSettings, defaultPreferences, getPerson } from './data';
 import type { Profile, Post, Thread, Community, Notification, Comment, Preferences, Settings, ModalState, Story } from './types';
 import { isSupabaseConfigured, isUuid, supabase, uploadImageData } from './lib/supabase';
+import { createPostOnServer } from './lib/backend';
 
 function useStoredState<T>(key: string, initial: T): [T, Dispatch<SetStateAction<T>>] {
   const [value, setValue] = useState<T>(() => {
@@ -129,8 +130,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (supabase && session && isUuid(post.id)) {
       try {
         const imageUrl = post.image?.startsWith('data:') ? await uploadImageData(post.image,session.user.id,'posts') : post.image;
-        const {error}=await supabase.from('posts').insert({id:post.id,user_id:session.user.id,content:post.text,image_url:imageUrl||null,tags:post.tags,community_id:isUuid(post.communityId||'')?post.communityId:null,poll_options:post.pollOptions||null,poll_votes:post.pollVotes||null,poll_duration:post.pollDuration||null,poll_multiple:post.pollMultiple||false});
-        if(error) throw error;
+        const payload={id:post.id,content:post.text,image_url:imageUrl||null,tags:post.tags,community_id:isUuid(post.communityId||'')?post.communityId!:null,poll_options:post.pollOptions||null,poll_votes:post.pollVotes||null,poll_duration:post.pollDuration||null,poll_multiple:post.pollMultiple||false};
+        try {
+          await createPostOnServer(payload,session.access_token);
+        } catch (serverError) {
+          const {error}=await supabase.from('posts').insert({...payload,user_id:session.user.id});
+          if(error) throw new Error(`API: ${serverError instanceof Error?serverError.message:'unavailable'}; Supabase: ${error.message}`);
+          notify('Post saved through Supabase directly because the API server is unavailable.');
+        }
         if(imageUrl!==post.image) setPosts(prev=>prev.map(item=>item.id===post.id?{...item,image:imageUrl}:item));
       } catch(error) { notify(`Post is on this device, but database save failed: ${error instanceof Error?error.message:'unknown error'}`); }
     }
