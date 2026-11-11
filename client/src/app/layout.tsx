@@ -4,6 +4,7 @@ import '@fontsource-variable/manrope';
 import './globals.css';
 import '../base.css';
 import '../styles.css';
+import '../more-pages.css';
 
 export const metadata: Metadata = {
   title: 'Chatra — Real people. Brighter conversations.',

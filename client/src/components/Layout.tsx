@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { NavLink, Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { House, Search, Compass, Bell, MessageCircle, Users, Bookmark, UserRound, Settings, Plus, MoreHorizontal, ChevronRight, Sparkles, Check, ArrowUpRight, Activity, Flag, FileText, ShieldCheck, PhoneCall, List, BarChart3, LifeBuoy, LogIn, LogOut } from 'lucide-react';
+import { House, Search, Compass, Bell, MessageCircle, Users, Bookmark, UserRound, Settings, Plus, MoreHorizontal, ChevronRight, Sparkles, Check, ArrowUpRight, Activity, Flag, FileText, ShieldCheck, PhoneCall, List, BarChart3, LifeBuoy, LogIn, LogOut, Grid2X2 } from 'lucide-react';
 import { useApp } from '../store';
 import { Avatar, Logo, Menu, IconButton } from './UI';
 
@@ -11,6 +11,7 @@ export const navItems = [
   { to: '/messages', label: 'Messages', icon: MessageCircle },
   { to: '/communities', label: 'Communities', icon: Users },
   { to: '/bookmarks', label: 'Bookmarks', icon: Bookmark },
+  { to: '/more', label: 'More', icon: Grid2X2 },
   { to: '/profile', label: 'Profile', icon: UserRound },
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
@@ -45,7 +46,7 @@ function MobileHeader() {
 function MobileNav() {
   const { notifications } = useApp();
   const unread = notifications.some(n => !n.read);
-  const items = [navItems[0], { ...navItems[1], to: '/search', label: 'Search', icon: Search }, navItems[4], navItems[2], navItems[6]];
+  const items = [navItems[0], { ...navItems[1], to: '/search', label: 'Search', icon: Search }, navItems[4], navItems[2], navItems[7], navItems[6]];
   return <nav className="mobile-nav" aria-label="Mobile navigation">{items.map(({ to, label, icon: Icon }) => <NavLink key={to} to={to} end={to === '/'} className={({ isActive }) => isActive ? 'active' : ''}><span><Icon size={24} strokeWidth={1.7} />{label === 'Notifications' && unread && <i className="mobile-notification-dot" />}</span><span>{label}</span></NavLink>)}</nav>;
 }
 export default function Layout() {
@@ -54,11 +55,10 @@ export default function Layout() {
   const isConversation = /^\/messages\/.+/.test(location.pathname);
   const isCall = location.pathname.startsWith('/call');
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, [location.pathname]);
-  const title = navItems.find(n => n.to === location.pathname)?.label || (location.pathname.startsWith('/profile') ? 'Profile' : location.pathname.startsWith('/messages') ? 'Messages' : isCall ? 'Video call' : location.pathname === '/personalize' ? 'Personalize your experience' : location.pathname.startsWith('/admin') ? 'Admin' : location.pathname === '/calls' ? 'Call history' : location.pathname.startsWith('/creator/post/') ? 'Post analytics' : location.pathname === '/creator' ? 'Creator dashboard' : location.pathname === '/drafts' ? 'Drafts & scheduled' : location.pathname === '/login' ? 'Sign in' : location.pathname === '/search' ? 'Search' : location.pathname === '/stories/create' ? 'Create a story' : location.pathname.startsWith('/support/') ? 'Support' : location.pathname === '/reset-password' ? 'Reset password' : location.pathname === '/two-factor-challenge' ? 'Two-factor verification' : location.pathname === '/profile/edit' ? 'Edit profile' : location.pathname.startsWith('/tag/') ? `#${location.pathname.split('/').pop()}` : location.pathname.startsWith('/lists') ? 'My lists' : 'Home');
+  const title = navItems.find(n => n.to === location.pathname)?.label || (location.pathname.startsWith('/profile') ? 'Profile' : location.pathname.startsWith('/messages') ? 'Messages' : isCall ? 'Video call' : location.pathname === '/personalize' ? 'Personalize your experience' : location.pathname.startsWith('/admin') ? 'Admin' : location.pathname === '/calls' ? 'Call history' : location.pathname.startsWith('/creator/post/') ? 'Post analytics' : location.pathname === '/creator' ? 'Creator dashboard' : location.pathname === '/drafts' ? 'Drafts & scheduled' : location.pathname === '/login' ? 'Sign in' : location.pathname === '/search' ? 'Search' : location.pathname === '/stories/create' ? 'Create a story' : location.pathname.startsWith('/support/') ? 'Support' : location.pathname === '/reset-password' ? 'Reset password' : location.pathname === '/two-factor-challenge' ? 'Two-factor verification' : location.pathname === '/profile/edit' ? 'Edit profile' : location.pathname.startsWith('/tag/') ? `#${location.pathname.split('/').pop()}` : location.pathname.startsWith('/lists') ? 'My lists' : location.pathname === '/people' ? 'People' : location.pathname.startsWith('/events') ? 'Events' : location.pathname === '/message-requests' ? 'Message requests' : location.pathname === '/bookmarks/collections' ? 'Bookmark collections' : location.pathname === '/notifications/preferences' ? 'Notification preferences' : location.pathname === '/privacy' ? 'Privacy center' : location.pathname === '/security' ? 'Security center' : location.pathname === '/help' || location.pathname === '/help/contact' ? 'Help center' : location.pathname === '/about' ? 'About Chatra' : location.pathname === '/terms' ? 'Terms of use' : location.pathname === '/privacy-policy' ? 'Privacy policy' : location.pathname === '/accessibility' ? 'Accessibility' : location.pathname === '/creator/resources' ? 'Creator resources' : location.pathname === '/insights' ? 'Your insights' : location.pathname.startsWith('/community') ? 'Community' : 'Home');
   useEffect(() => { document.title = `${title} · Chatra`; }, [title]);
   return <div className={`app-shell ${isConversation ? 'in-conversation' : ''} ${isCall ? 'in-call' : ''}`}><a href="#main-content" className="skip-link">Skip to content</a><Sidebar /><MobileHeader /><main id="main-content" className={`main-content route-${location.pathname.split('/')[1] || 'home'}`}><Outlet /></main>{!isCall && !isConversation && <button className="mobile-fab" aria-label="Create post" onClick={() => openModal('compose')}><Plus size={29} /></button>}<MobileNav />{toast && <div className="toast" role="status"><span><Check size={17} /></span>{toast}</div>}</div>;
 }
 export function RightFooter() {
-  const { openModal } = useApp();
-  return <footer className="right-footer"><div><button onClick={() => openModal('about')}>About Chatra</button><span>·</span><button onClick={() => openModal('help', { section: 'privacy' })}>Privacy</button><span>·</span><button onClick={() => openModal('help')}>Help</button></div><p>© 2026 Chatra. Made for connection.</p><Link to="/personalize"><Sparkles size={13} /> Make Chatra yours <ChevronRight size={13} /></Link></footer>;
+  return <footer className="right-footer"><div><Link to="/about">About Chatra</Link><span>·</span><Link to="/privacy-policy">Privacy</Link><span>·</span><Link to="/help">Help</Link></div><p>© 2026 Chatra. Made for connection.</p><Link to="/personalize"><Sparkles size={13} /> Make Chatra yours <ChevronRight size={13} /></Link></footer>;
 }
