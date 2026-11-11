@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { NavLink, Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { House, Search, Compass, Bell, MessageCircle, Users, Bookmark, UserRound, Settings, Plus, MoreHorizontal, ChevronRight, Sparkles, Check, ArrowUpRight, Activity, Flag, FileText, ShieldCheck, PhoneCall, List, BarChart3, LifeBuoy, LogIn, LogOut, Grid2X2 } from 'lucide-react';
+import { House, Search, Compass, Bell, MessageCircle, Users, Bookmark, UserRound, Settings, Plus, MoreHorizontal, ChevronRight, Palette, Check, ArrowUpRight, Activity, Flag, FileText, ShieldCheck, PhoneCall, List, BarChart3, LifeBuoy, LogIn, LogOut, Grid2X2 } from 'lucide-react';
 import { useApp } from '../store';
 import { Avatar, Logo, Menu, IconButton } from './UI';
 
@@ -21,7 +21,7 @@ function AccountMenu() {
   return <Menu label="Account options" items={[{ label: session ? 'Sign out' : 'Sign in / create account', icon: session ? <LogOut size={17} /> : <LogIn size={17} />, onClick: () => session ? void signOut() : navigate('/login') },
 
     { label: 'View your profile', icon: <UserRound size={17} />, onClick: () => navigate('/profile') },
-    { label: 'Personalize your experience', icon: <Sparkles size={17} />, onClick: () => navigate('/personalize') },
+    { label: 'Personalize your experience', icon: <Palette size={17} />, onClick: () => navigate('/personalize') },
     { label: 'Creator dashboard', icon: <BarChart3 size={17} />, onClick: () => navigate('/creator') },
     { label: 'Drafts & scheduled', icon: <FileText size={17} />, onClick: () => navigate('/drafts') },
     { label: 'My lists', icon: <List size={17} />, onClick: () => navigate('/lists') },
@@ -60,5 +60,5 @@ export default function Layout() {
   return <div className={`app-shell ${isConversation ? 'in-conversation' : ''} ${isCall ? 'in-call' : ''}`}><a href="#main-content" className="skip-link">Skip to content</a><Sidebar /><MobileHeader /><main id="main-content" className={`main-content route-${location.pathname.split('/')[1] || 'home'}`}><Outlet /></main>{!isCall && !isConversation && <button className="mobile-fab" aria-label="Create post" onClick={() => openModal('compose')}><Plus size={29} /></button>}<MobileNav />{toast && <div className="toast" role="status"><span><Check size={17} /></span>{toast}</div>}</div>;
 }
 export function RightFooter() {
-  return <footer className="right-footer"><div><Link to="/about">About Chatra</Link><span>·</span><Link to="/privacy-policy">Privacy</Link><span>·</span><Link to="/help">Help</Link></div><p>© 2026 Chatra. Made for connection.</p><Link to="/personalize"><Sparkles size={13} /> Make Chatra yours <ChevronRight size={13} /></Link></footer>;
+  return <footer className="right-footer"><div><Link to="/about">About Chatra</Link><span>·</span><Link to="/privacy-policy">Privacy</Link><span>·</span><Link to="/help">Help</Link></div><p>© 2026 Chatra. Made for connection.</p><Link to="/personalize"><Palette size={13} /> Make Chatra yours <ChevronRight size={13} /></Link></footer>;
 }

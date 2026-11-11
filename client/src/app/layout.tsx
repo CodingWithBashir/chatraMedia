@@ -5,6 +5,7 @@ import './globals.css';
 import '../base.css';
 import '../styles.css';
 import '../more-pages.css';
+import '../critical-views.css';
 
 export const metadata: Metadata = {
   title: 'Chatra — Real people. Brighter conversations.',
