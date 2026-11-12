@@ -17,7 +17,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-The web client runs at <http://localhost:3000>; the API listens on <http://localhost:4001>. The Next.js `/api/*` rewrite keeps browser requests same-origin and forwards them to the Node API. The client uses the API to create posts; if the API is unavailable, it falls back to the Supabase client with the signed-in user's session and RLS.
+The web client runs at <http://localhost:3000>; the standalone Express API listens on <http://localhost:4001>. The Next.js App Router also exposes same-origin Node.js handlers at `/api/health`, `/api/me`, and `/api/posts`, so the deployed Next app does not depend on a localhost API process. Post creation uses the authenticated user's Supabase access token and RLS, with a direct Supabase fallback if needed.
 
 ```sh
 npm run typecheck
@@ -28,11 +28,10 @@ npm run start
 ## Environment variables
 
 - `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are public Supabase browser credentials. The API uses the same publishable/anon key with the user's bearer token, so Supabase RLS remains authoritative.
-- `CHATRA_API_INTERNAL_URL` optionally changes the server-side rewrite target (default `http://127.0.0.1:4001`).
-- `PORT` and `CHATRA_CLIENT_ORIGIN` configure the API listener and optional direct CORS origin.
+- `PORT` and `CHATRA_CLIENT_ORIGIN` configure the optional standalone Express API listener and its direct CORS origin.
 
 Never put a Supabase service-role key in a `NEXT_PUBLIC_*` variable or commit it. `.env.local` is ignored by Git.
 
 ## Deployment notes
 
-Deploy `client/` as the Next.js application and `server/` as a Node.js service. Configure the same Supabase URL and publishable key in both deployments, then set `CHATRA_API_INTERNAL_URL` in the Next deployment to the private or public URL of the API service. Run the migrations in `supabase/migrations/` against the target Supabase project before enabling database-backed features.
+For Vercel, link the repository and set the project root to `client/` (or the repository root with build command `npm run build --workspace @chatra/client`). Add `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to the Vercel project for production and preview. The App Router API routes run as Vercel Node.js functions and do not require the standalone Express service. Ensure the migrations in `supabase/migrations/` have been applied to the configured Supabase project.
