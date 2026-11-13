@@ -186,3 +186,75 @@
   .auth-float-card,.auth-confirm-icon svg,.auth-confirm-progress span { animation: none !important; }
   .auth-field,.auth-primary-button { transition: none !important; }
 }
+
+/* Dedicated, focused sign-up page inspired by the supplied reference. */
+.chatra-signup-page {
+  --signup-accent: #1687f8;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(ellipse at 50% 10%, #24313a 0, transparent 46%), #1b1b1b;
+  color: #f4f6f8;
+}
+.chatra-signup-topbar { width: min(1180px,100%); min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 auto; padding: 16px 32px; }
+.chatra-signup-topbar>a { display: inline-flex; align-items: center; gap: 13px; color: #aab3bc; }
+.chatra-signup-topbar>a:hover { color: #fff; }
+.chatra-signup-topbar .brand { color: #29dfcf; font-size: 21px; }
+.chatra-signup-topbar .brand svg { width: 30px; height: 30px; }
+.chatra-signup-topbar>span { color: #8b939a; font-size: 11px; }
+.chatra-signup-content { width: min(458px,calc(100% - 34px)); flex: 1; margin: 0 auto; padding: 28px 0 38px; }
+.chatra-signup-intro { margin: 0 0 24px; }
+.signup-kicker { color: #39dcca; font-size: 9px; font-weight: 800; letter-spacing: .16em; }
+.chatra-signup-intro h1 { margin: 8px 0 5px; font-family: 'Manrope Variable',Manrope,sans-serif; font-size: clamp(23px,4vw,30px); font-weight: 750; letter-spacing: -.045em; line-height: 1.2; }
+.chatra-signup-intro p { margin: 0; color: #a8afb7; font-size: 12px; line-height: 1.55; }
+.chatra-signup-form { display: flex; flex-direction: column; gap: 15px; }
+.signup-field-label { display: flex; flex-direction: column; gap: 7px; color: #f1f3f5; font-size: 12px; font-weight: 650; }
+.signup-field { min-height: 49px; display: flex; align-items: center; gap: 10px; padding: 0 13px; border: 1px solid #484848; border-radius: 12px; background: #1e1e1e; color: #aab2ba; transition: border-color .16s ease, box-shadow .16s ease; }
+.signup-field:focus-within { border-color: #4c9df5; box-shadow: 0 0 0 3px #1687f822; }
+.signup-field>svg { flex: none; }
+.signup-field input { width: 100%; min-width: 0; height: 46px; border: 0; outline: 0; background: transparent; color: #f4f6f8; font-size: 12px; }
+.signup-field input::placeholder { color: #858d95; }
+.signup-field button { display: grid; place-items: center; padding: 4px; border: 0; background: transparent; color: #bcc4cb; }
+.signup-field button:hover { color: #fff; }
+.signup-birthday-fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.signup-birthday-fieldset legend { width: 100%; display: flex; align-items: center; gap: 6px; margin-bottom: 8px; padding: 0; color: #f1f3f5; font-size: 12px; font-weight: 650; }
+.birthday-private { display: inline-grid; place-items: center; color: #9ba6b0; }
+.signup-birthday-selects { display: grid; grid-template-columns: 1fr .92fr 1fr; gap: 10px; }
+.signup-birthday-selects select { width: 100%; height: 49px; padding: 0 12px; border: 1px solid #484848; border-radius: 12px; outline: none; background: #1e1e1e; color: #f4f6f8; font-size: 12px; }
+.signup-birthday-selects select:focus { border-color: #4c9df5; box-shadow: 0 0 0 3px #1687f822; }
+.signup-birthday-selects option { background: #202020; color: #fff; }
+.signup-birthday-fieldset>small { display: block; margin-top: 7px; color: #929ba4; font-size: 10px; line-height: 1.5; }
+.signup-identifier-note { margin: -9px 0 -4px; color: #929ba4; font-size: 10px; line-height: 1.5; }
+.signup-legal-copy { display: flex; flex-direction: column; gap: 9px; margin: 2px 0 0; color: #b0b6bd; font-size: 10px; line-height: 1.5; }
+.signup-legal-copy p { margin: 0; }
+.signup-legal-copy a { color: #64aefb; font-weight: 650; }
+.signup-legal-copy a:hover { text-decoration: underline; }
+.signup-submit { width: 100%; min-height: 47px; display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 1px; padding: 0 16px; border: 1px solid var(--signup-accent); border-radius: 999px; background: var(--signup-accent); color: #fff; font-size: 12px; font-weight: 750; transition: background .16s ease, transform .16s ease; }
+.signup-submit:hover { transform: translateY(-1px); background: #3097ff; }
+.signup-submit:disabled { opacity: .58; cursor: not-allowed; }
+.signup-existing-account { width: 100%; min-height: 44px; border: 1px solid #353535; border-radius: 999px; background: #292929; color: #e4e7eb; font-size: 11px; font-weight: 650; }
+.signup-existing-account:hover { background: #343434; }
+.signup-at { color: #8e9aa6; font-size: 15px; font-weight: 750; }
+.signup-username-field>svg { flex: none; color: #39c96f; }
+.signup-connected { display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 28px 0; padding: 25px; border: 1px solid #ffffff20; border-radius: 16px; background: #20252b; text-align: center; }
+.signup-connected>span { width: 48px; height: 48px; display: grid; place-items: center; border-radius: 50%; background: #29dfcf16; color: #39dfd0; }
+.signup-connected>strong { font-size: 17px; }
+.signup-connected>p { margin: 0 0 5px; color: #abb5bf; font-size: 12px; }
+.signup-connected .signup-submit { text-align: left; }
+.signup-footer { width: min(1180px,100%); display: flex; align-items: center; justify-content: space-between; gap: 18px; margin: auto auto 0; padding: 17px 32px 22px; color: #858b92; font-size: 10px; }
+.signup-footer>span:last-child { display: flex; gap: 17px; }
+.signup-footer a:hover { color: #dfe4e8; }
+.signup-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; clip-path: inset(50%); }
+@media(max-width:560px) {
+  .chatra-signup-topbar { min-height: 62px; padding: 12px 19px; }
+  .chatra-signup-topbar>span { display: none; }
+  .chatra-signup-content { padding: 22px 0 28px; }
+  .chatra-signup-intro { margin-bottom: 20px; }
+  .chatra-signup-form { gap: 13px; }
+  .signup-birthday-selects { gap: 7px; }
+  .signup-birthday-selects select { padding: 0 8px; font-size: 11px; }
+  .signup-footer { flex-direction: column; justify-content: center; gap: 9px; padding: 15px 18px 19px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .signup-field,.signup-submit { transition: none !important; }
+}
